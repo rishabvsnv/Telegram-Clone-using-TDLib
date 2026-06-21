@@ -49,7 +49,7 @@ class ProfileScreen extends StatelessWidget {
 
           const Center(
             child: Text(
-              'Prashant',
+              'Rishabh',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
             ),
           ),
@@ -77,7 +77,7 @@ class ProfileScreen extends StatelessWidget {
           _profileTile(
             icon: Icons.alternate_email,
             title: 'Username',
-            subtitle: '@prashant',
+            subtitle: '@rishabvsnv',
             onTap: () {},
           ),
 

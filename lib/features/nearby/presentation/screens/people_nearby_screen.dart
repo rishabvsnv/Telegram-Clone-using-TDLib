@@ -1,46 +1,49 @@
 import 'package:flutter/material.dart';
 
-class PeopleNearbyScreen extends StatelessWidget {
+class PeopleNearbyScreen extends StatefulWidget {
   const PeopleNearbyScreen({super.key});
 
   @override
+  State<PeopleNearbyScreen> createState() => _PeopleNearbyScreenState();
+}
+
+class _PeopleNearbyScreenState extends State<PeopleNearbyScreen> {
+  final users = [
+    const NearbyUser(name: 'John Doe', distance: '120 m away', isOnline: true),
+    const NearbyUser(
+      name: 'Emma Wilson',
+      distance: '350 m away',
+      isOnline: true,
+    ),
+    const NearbyUser(
+      name: 'Michael Smith',
+      distance: '1.2 km away',
+      isOnline: false,
+    ),
+    const NearbyUser(
+      name: 'Sophia Brown',
+      distance: '2.5 km away',
+      isOnline: false,
+    ),
+  ];
+
+  final groups = [
+    const NearbyGroup(
+      name: 'Flutter Developers',
+      members: 248,
+      distance: '500 m away',
+    ),
+    const NearbyGroup(
+      name: 'Bhopal Tech Community',
+      members: 1350,
+      distance: '1.8 km away',
+    ),
+  ];
+
+  bool autoDownloadPhotos = true;
+
+  @override
   Widget build(BuildContext context) {
-    final users = [
-      const NearbyUser(
-        name: 'John Doe',
-        distance: '120 m away',
-        isOnline: true,
-      ),
-      const NearbyUser(
-        name: 'Emma Wilson',
-        distance: '350 m away',
-        isOnline: true,
-      ),
-      const NearbyUser(
-        name: 'Michael Smith',
-        distance: '1.2 km away',
-        isOnline: false,
-      ),
-      const NearbyUser(
-        name: 'Sophia Brown',
-        distance: '2.5 km away',
-        isOnline: false,
-      ),
-    ];
-
-    final groups = [
-      const NearbyGroup(
-        name: 'Flutter Developers',
-        members: 248,
-        distance: '500 m away',
-      ),
-      const NearbyGroup(
-        name: 'Bhopal Tech Community',
-        members: 1350,
-        distance: '1.8 km away',
-      ),
-    ];
-
     return Scaffold(
       appBar: AppBar(title: const Text('People Nearby')),
       body: ListView(
@@ -80,7 +83,14 @@ class PeopleNearbyScreen extends StatelessWidget {
             leading: const CircleAvatar(child: Icon(Icons.radar)),
             title: const Text('Make Me Visible'),
             subtitle: const Text('Allow others nearby to find you'),
-            trailing: Switch(value: true, onChanged: (_) {}),
+            trailing: Switch(
+              value: autoDownloadPhotos,
+              onChanged: (value) {
+                setState(() {
+                  autoDownloadPhotos = value;
+                });
+              },
+            ),
           ),
 
           const Divider(),

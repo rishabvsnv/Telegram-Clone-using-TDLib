@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:messenger/shared/widgets/custom_drawer.dart';
 
 class ChatScreen extends ConsumerWidget {
@@ -80,19 +81,23 @@ class ChatScreen extends ConsumerWidget {
         child: const Icon(Icons.mode_edit_outline_rounded, color: Colors.white),
       ),
 
+      /* appBar: CustomAppBar(
+        title: 'Telegram',
+        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.search))],
+      ), */
       body: SafeArea(
         child: Builder(
           builder: (context) {
             return Column(
               children: [
-                /* Padding(
+                Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 12,
                   ),
                   child: Row(
                     children: [
-                      SizedBox(
+                      /* SizedBox(
                         width: 54,
                         child: Stack(
                           children: [
@@ -109,6 +114,12 @@ class ChatScreen extends ConsumerWidget {
                             ),
                           ],
                         ),
+                      ), */
+                      IconButton(
+                        onPressed: () {
+                          Scaffold.of(context).openDrawer();
+                        },
+                        icon: const Icon(Icons.menu_rounded),
                       ),
 
                       const Text(
@@ -124,38 +135,7 @@ class ChatScreen extends ConsumerWidget {
 
                       IconButton(
                         onPressed: () {},
-                        icon: const Icon(Icons.more_vert),
-                      ),
-                    ],
-                  ),
-                ), */
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
-                  ),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Scaffold.of(context).openDrawer();
-                        },
-                        icon: const Icon(Icons.menu_rounded),
-                      ),
-
-                      const Expanded(
-                        child: Text(
-                          'Telegram',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.search_rounded),
+                        icon: const Icon(Icons.search),
                       ),
                     ],
                   ),
@@ -230,7 +210,9 @@ class ChatScreen extends ConsumerWidget {
                       final chat = chats[index];
 
                       return InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          context.push('/messages', extra: chat['name']);
+                        },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 16,

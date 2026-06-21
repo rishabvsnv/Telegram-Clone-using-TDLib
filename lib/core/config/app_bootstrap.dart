@@ -1,15 +1,13 @@
-/* import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:myschoolio/core/helpers/auth_helper.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:messenger/app.dart';
 
 Future<void> bootstrapApp() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  runZoned(() {
+    WidgetsFlutterBinding.ensureInitialized();
 
-  if (!kIsWeb) {
-    await Firebase.initializeApp();
-  }
-
-  await AuthHelper.init();
+    runApp(const ProviderScope(child: MyMessengerApp()));
+  });
 }
- */

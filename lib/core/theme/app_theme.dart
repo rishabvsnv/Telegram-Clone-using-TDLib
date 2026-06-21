@@ -36,8 +36,8 @@ final ThemeData lightTheme = ThemeData(
     centerTitle: false,
     surfaceTintColor: Colors.transparent,
     titleTextStyle: TextStyle(
-      fontSize: 20,
-      fontWeight: FontWeight.w600,
+      fontSize: 22,
+      fontWeight: FontWeight.w700,
       color: AppColors.textPrimary,
     ),
   ),

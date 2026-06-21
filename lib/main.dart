@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:messenger/app.dart';
+import 'package:messenger/core/config/app_bootstrap.dart';
 
 void main() {
-  runApp(const ProviderScope(child: MyMessengerApp()));
+  bootstrapApp();
 }

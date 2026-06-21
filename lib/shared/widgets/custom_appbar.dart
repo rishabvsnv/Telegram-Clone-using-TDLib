@@ -20,32 +20,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: isDashboard
-          ? Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(Images.appIcon2, height: 30),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text((title), overflow: TextOverflow.ellipsis),
-                  ),
-                ],
-              ),
-            )
-          : (customTitle ?? Text(title)),
+      title: (customTitle ?? Text(title)),
       centerTitle: isCenterTitle,
       actions: actions,
-      /* actions: isDashboard
-          ? [
-              IconButton(
-                onPressed: () {
-                  context.push('/notification');
-                },
-                icon: Icon(Icons.notifications),
-              ),
-            ]
-          : actions, */
     );
   }
 

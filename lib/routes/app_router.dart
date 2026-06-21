@@ -3,12 +3,14 @@ import 'package:go_router/go_router.dart';
 
 import 'package:messenger/features/auth/presentation/screens/login_screen.dart';
 import 'package:messenger/features/chats/presentation/screens/chat_screen.dart';
+import 'package:messenger/features/archives/presentation/screens/archive_screen.dart';
 import 'package:messenger/features/profile/presentation/screens/profile_screen.dart';
 import 'package:messenger/features/settings/presentation/screens/setting_screen.dart';
 import 'package:messenger/features/contacts/presentation/screens/contacts_screen.dart';
 import 'package:messenger/features/calls/presentation/screens/calls_screen.dart';
 import 'package:messenger/features/folders/presentation/screens/folders_screen.dart';
 import 'package:messenger/features/devices/presentation/screens/devices_screen.dart';
+import 'package:messenger/features/messages/presentation/screens/messages_screen.dart';
 import 'package:messenger/features/saved_messages/presentation/screens/saved_messages_screen.dart';
 import 'package:messenger/features/groups/presentation/screens/new_group_screen.dart';
 import 'package:messenger/features/channels/presentation/screens/new_channel_screen.dart';
@@ -27,6 +29,17 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       // Chats
       GoRoute(path: '/chats', builder: (context, state) => const ChatScreen()),
+
+      // Archive
+      GoRoute(
+        path: '/archive',
+        builder: (context, state) => const ArchiveScreen(),
+      ),
+
+      GoRoute(
+        path: '/messages',
+        builder: (context, state) => const MessagesScreen(chatId: '1'),
+      ),
 
       // Profile
       GoRoute(

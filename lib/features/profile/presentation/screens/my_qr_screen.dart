@@ -7,8 +7,8 @@ class MyQrScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Todo: Replace with actual user data from Riverpod/Auth Provider
-    const String fullName = 'Prashant';
-    const String username = 'prashant';
+    const String fullName = 'Rishabh';
+    const String username = 'rishabvsnv';
     const String phoneNumber = '+91 9876543210';
 
     final qrData = 'https://t.me/$username';
