@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:messenger/routes/named_routes.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -83,31 +85,41 @@ class SettingsScreen extends ConsumerWidget {
           _settingsTile(
             icon: Icons.notifications_none,
             title: 'Notifications',
-            onTap: () {},
+            onTap: () {
+              context.push(NamedRoutes.notifications);
+            },
           ),
 
           _settingsTile(
             icon: Icons.lock_outline,
             title: 'Privacy & Security',
-            onTap: () {},
+            onTap: () {
+              context.push(NamedRoutes.privacy);
+            },
           ),
 
           _settingsTile(
             icon: Icons.chat_bubble_outline,
             title: 'Chat Settings',
-            onTap: () {},
+            onTap: () {
+              // context.push(NamedRoutes.);
+            },
           ),
 
           _settingsTile(
             icon: Icons.palette_outlined,
             title: 'Appearance',
-            onTap: () {},
+            onTap: () {
+              context.push(NamedRoutes.appearance);
+            },
           ),
 
           _settingsTile(
             icon: Icons.language_outlined,
             title: 'Language',
-            onTap: () {},
+            onTap: () {
+              context.push(NamedRoutes.language);
+            },
           ),
 
           const Divider(),
@@ -117,13 +129,17 @@ class SettingsScreen extends ConsumerWidget {
           _settingsTile(
             icon: Icons.storage_outlined,
             title: 'Storage Usage',
-            onTap: () {},
+            onTap: () {
+              context.push(NamedRoutes.storage);
+            },
           ),
 
           _settingsTile(
             icon: Icons.network_check_outlined,
             title: 'Data Usage',
-            onTap: () {},
+            onTap: () {
+              context.push(NamedRoutes.dataUsage);
+            },
           ),
 
           _settingsTile(
@@ -139,13 +155,17 @@ class SettingsScreen extends ConsumerWidget {
           _settingsTile(
             icon: Icons.devices_outlined,
             title: 'Devices',
-            onTap: () {},
+            onTap: () {
+              context.push(NamedRoutes.devices);
+            },
           ),
 
           _settingsTile(
             icon: Icons.folder_outlined,
             title: 'Chat Folders',
-            onTap: () {},
+            onTap: () {
+              context.push(NamedRoutes.folders);
+            },
           ),
 
           const Divider(),
@@ -170,7 +190,9 @@ class SettingsScreen extends ConsumerWidget {
               'Logout',
               style: TextStyle(color: Colors.red, fontWeight: FontWeight.w600),
             ),
-            onTap: () {},
+            onTap: () {
+              context.push(NamedRoutes.login);
+            },
           ),
 
           const SizedBox(height: 24),
