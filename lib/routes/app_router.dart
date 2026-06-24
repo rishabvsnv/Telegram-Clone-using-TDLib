@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:messenger/features/common/presentation/screens/main_screen.dart';
 import 'package:messenger/features/common/presentation/screens/share_screen.dart';
 import 'package:messenger/features/common/presentation/screens/telegram_features_screen.dart';
 import 'package:messenger/features/contacts/presentation/screens/blocked_users_screen.dart';
@@ -10,9 +11,13 @@ import 'package:messenger/routes/routes_export.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: NamedRoutes.chats,
+    initialLocation: NamedRoutes.login,
     routes: [
       // Auth
+      GoRoute(
+        path: NamedRoutes.main,
+        builder: (context, state) => const MainScreen(),
+      ),
       GoRoute(
         path: NamedRoutes.splash,
         builder: (context, state) => const SplashScreen(),
@@ -61,7 +66,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       // Settings
       GoRoute(
         path: NamedRoutes.settings,
-        builder: (context, state) => const SettingsScreen(),
+        builder: (context, state) => const SettingScreen(),
       ),
       GoRoute(
         path: NamedRoutes.appearance,

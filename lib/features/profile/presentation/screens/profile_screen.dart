@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:messenger/routes/named_routes.dart';
+import 'package:messenger/shared/widgets/custom_appbar.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -9,12 +10,46 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
+      appBar: CustomAppBar(
+        title: 'Profile',
+        customTitle: IconButton(
+          onPressed: () {
+            context.push(NamedRoutes.myQR);
+          },
+          icon: Icon(Icons.qr_code),
+        ),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.edit_outlined)),
+          PopupMenuButton(
+            itemBuilder: (_) => const [
+              PopupMenuItem(
+                value: '',
+                child: Row(
+                  children: [
+                    Icon(Icons.color_lens_outlined),
+                    Text('Change profile color'),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: '',
+                child: Row(
+                  children: [
+                    Icon(Icons.alternate_email),
+                    Text('Change username'),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: '',
+                child: Row(
+                  children: [Icon(Icons.link), Text('Copy link to profile')],
+                ),
+              ),
+            ],
+          ),
         ],
       ),
+
       body: ListView(
         children: [
           const SizedBox(height: 24),

@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:messenger/routes/named_routes.dart';
 import 'package:messenger/shared/widgets/custom_appbar.dart';
-import 'package:messenger/shared/widgets/custom_drawer.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
   const ChatScreen({super.key});
@@ -15,7 +14,7 @@ class ChatScreen extends ConsumerStatefulWidget {
 class _ChatScreenState extends ConsumerState<ChatScreen> {
   int selectedTab = 0;
 
-  final tabs = ['All', 'Groups', 'Work', 'Bots'];
+  final tabs = ['All', 'Unread', 'Groups', 'Work', 'Bots'];
 
   final chats = [
     {
@@ -112,9 +111,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       return aPinned ? -1 : 1;
     });
     return Scaffold(
-      drawer: const CustomDrawer(),
+      backgroundColor: Colors.white,
 
       floatingActionButton: FloatingActionButton(
+        heroTag: 'chat_fab',
         backgroundColor: const Color(0xff229ED9),
         onPressed: () {},
         child: const Icon(Icons.mode_edit_outline_rounded, color: Colors.white),
@@ -123,13 +123,117 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       appBar: CustomAppBar(
         isDashboard: true,
         title: 'Telegram',
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.search))],
+        customTitle: Row(
+          children: [
+            SizedBox(
+              width: 54,
+              child: Stack(
+                children: [
+                  const CircleAvatar(
+                    radius: 16,
+                    backgroundColor: Colors.orange,
+                  ),
+                  Positioned(
+                    left: 18,
+                    child: CircleAvatar(
+                      radius: 16,
+                      backgroundColor: Colors.purple.shade200,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Text(
+              "Telegram",
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
+                color: Color(0xff229ED9),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          PopupMenuButton(
+            itemBuilder: (_) => const [
+              PopupMenuItem(
+                value: 'profile',
+                child: Row(
+                  children: [
+                    Icon(Icons.dark_mode_outlined),
+                    Text('Night Mode'),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: 'message',
+                child: Row(
+                  children: [Icon(Icons.people_outlined), Text('New Group')],
+                ),
+              ),
+              PopupMenuItem(
+                value: 'remove',
+                child: Row(
+                  children: [
+                    Icon(Icons.bookmark_outline),
+                    Text('Saved Messages'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          // IconButton(onPressed: () {}, icon: Icon(Icons.more_vert))
+        ],
       ),
       body: SafeArea(
         child: Builder(
           builder: (context) {
             return Column(
               children: [
+                /* Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 54,
+                        child: Stack(
+                          children: [
+                            const CircleAvatar(
+                              radius: 16,
+                              backgroundColor: Colors.orange,
+                            ),
+                            Positioned(
+                              left: 18,
+                              child: CircleAvatar(
+                                radius: 16,
+                                backgroundColor: Colors.purple.shade200,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const Text(
+                        "Telegram",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xff229ED9),
+                        ),
+                      ),
+
+                      const Spacer(),
+
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.search),
+                      ),
+                    ],
+                  ),
+                ), */
                 Container(
                   margin: const EdgeInsets.symmetric(
                     horizontal: 16,
@@ -148,70 +252,43 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 12),
-
                 SizedBox(
-                  height: 88,
-                  child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 8,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 14),
-                        child: SizedBox(
-                          width: 60,
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(2),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: const Color(0xff229ED9),
-                                    width: 2,
-                                  ),
-                                ),
-                                child: CircleAvatar(
-                                  radius: 24,
-                                  backgroundColor:
-                                      Colors.primaries[index %
-                                          Colors.primaries.length],
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Text(
-                                index == 0 ? 'You' : 'User',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(fontSize: 11),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
+                  height: 100,
+                  child: Card(
+                    elevation: 1,
+                    margin: EdgeInsets.all(16),
+                    child: ListTile(
+                      dense: true,
+                      title: Text('Add your birthday! 🎂'),
+                      subtitle: Text(
+                        'Let your contacts know when you\'re celebrating',
+                      ),
+                    ),
                   ),
                 ),
 
                 SizedBox(
                   height: 42,
-                  child: ListView(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      ...List.generate(
-                        tabs.length,
-                        (index) => GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedTab = index;
-                            });
-                          },
-                          child: _tab(tabs[index], selectedTab == index),
+                  child: Card(
+                    elevation: 1,
+                    margin: EdgeInsets.symmetric(horizontal: 16),
+                    child: ListView(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        ...List.generate(
+                          tabs.length,
+                          (index) => GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedTab = index;
+                              });
+                            },
+                            child: _tab(tabs[index], selectedTab == index),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
 

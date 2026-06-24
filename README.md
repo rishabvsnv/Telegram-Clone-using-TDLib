@@ -228,7 +228,7 @@ path_provider
 ## Clone Repository
 
 ```bash
-git clone https://github.com/yourusername/telegram-clone.git
+git clone https://github.com/rishabvsnv/Telegram-Clone-using-TDLib.git
 
 cd telegram-clone
 ```

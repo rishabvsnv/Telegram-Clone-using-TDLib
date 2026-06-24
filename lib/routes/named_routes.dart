@@ -1,6 +1,8 @@
 class NamedRoutes {
   NamedRoutes.__();
 
+  static final String main = '/main';
+
   static final String splash = '/splash';
   static final String login = '/login';
   static final String otp = '/otp';
