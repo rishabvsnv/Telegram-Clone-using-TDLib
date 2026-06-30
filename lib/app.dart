@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:messenger/core/constants/app_constants.dart';
 import 'package:messenger/core/theme/app_theme.dart';
 import 'package:messenger/generated/app_localizations.dart';
-import 'package:messenger/routes/app_router.dart';
+import 'package:messenger/routes/app_router2.dart';
 
 class MyMessengerApp extends ConsumerWidget {
   const MyMessengerApp({super.key});

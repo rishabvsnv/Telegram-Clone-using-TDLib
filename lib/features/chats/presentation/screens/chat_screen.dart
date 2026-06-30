@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +13,7 @@ class ChatScreen extends ConsumerStatefulWidget {
 }
 
 class _ChatScreenState extends ConsumerState<ChatScreen> {
+  final PageController _pageController = PageController();
   int selectedTab = 0;
 
   final tabs = ['All', 'Unread', 'Groups', 'Work', 'Bots'];
@@ -113,11 +115,28 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
 
-      floatingActionButton: FloatingActionButton(
-        heroTag: 'chat_fab',
-        backgroundColor: const Color(0xff229ED9),
-        onPressed: () {},
-        child: const Icon(Icons.mode_edit_outline_rounded, color: Colors.white),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton.small(
+            heroTag: 'camera_fab',
+            backgroundColor: Colors.white,
+            elevation: 4,
+            onPressed: () {},
+            child: const Icon(Icons.camera_alt, color: Color(0xff229ED9)),
+          ),
+
+          const SizedBox(height: 12),
+
+          FloatingActionButton(
+            heroTag: 'compose_fab',
+            backgroundColor: const Color(0xff229ED9),
+            elevation: 6,
+            onPressed: () {},
+            child: const Icon(Icons.edit, color: Colors.white),
+          ),
+        ],
       ),
 
       appBar: CustomAppBar(
@@ -155,8 +174,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         ), */
         actions: [
           PopupMenuButton(
-            itemBuilder: (_) => const [
-              PopupMenuItem(
+            itemBuilder: (_) => [
+              const PopupMenuItem(
                 value: 'profile',
                 child: Row(
                   children: [
@@ -166,14 +185,20 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 ),
               ),
               PopupMenuItem(
+                onTap: () {
+                  context.push(NamedRoutes.newGroup);
+                },
                 value: 'message',
-                child: Row(
+                child: const Row(
                   children: [Icon(Icons.people_outlined), Text('New Group')],
                 ),
               ),
               PopupMenuItem(
+                onTap: () {
+                  context.push(NamedRoutes.savedMessages);
+                },
                 value: 'remove',
-                child: Row(
+                child: const Row(
                   children: [
                     Icon(Icons.bookmark_outline),
                     Text('Saved Messages'),
@@ -239,17 +264,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     horizontal: 16,
                     vertical: 8,
                   ),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: "Search",
-                      prefixIcon: Icon(Icons.search),
-                      filled: true,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
+                  child: CupertinoSearchTextField(placeholder: 'Search'),
                 ),
 
                 /* SizedBox(
@@ -266,195 +281,215 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     ),
                   ),
                 ), */
-                SizedBox(
-                  height: 42,
-                  child: Card(
-                    elevation: 1,
-                    margin: EdgeInsets.symmetric(horizontal: 16),
-                    child: ListView(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        ...List.generate(
-                          tabs.length,
-                          (index) => GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selectedTab = index;
-                              });
-                            },
-                            child: _tab(tabs[index], selectedTab == index),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                CupertinoSlidingSegmentedControl<int>(
+                  groupValue: selectedTab,
+                  children: {
+                    0: Text('All'),
+                    1: Text('Unread'),
+                    2: Text('Groups'),
+                    3: Text('Work'),
+                    4: Text('Bots'),
+                  },
+                  onValueChanged: (value) {
+                    setState(() {
+                      selectedTab = value!;
+                    });
+                  },
                 ),
 
                 const Divider(height: 1),
 
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: filteredChats.length,
-                    itemBuilder: (context, index) {
-                      final chat = filteredChats[index];
+                  child: PageView.builder(
+                    controller: _pageController,
+                    onPageChanged: (index) {
+                      setState(() {
+                        selectedTab = index;
+                      });
+                    },
+                    itemCount: tabs.length,
+                    itemBuilder: (context, tabIndex) {
+                      final filteredChats = tabIndex == 0
+                          ? chats
+                          : chats
+                                .where((chat) => chat["type"] == tabs[tabIndex])
+                                .toList();
 
-                      return InkWell(
-                        onLongPress: () {
-                          showModalBottomSheet(
-                            context: context,
-                            builder: (_) {
-                              return Wrap(
-                                children: [
-                                  ListTile(
-                                    leading: Icon(Icons.push_pin),
-                                    title: Text("Pin Chat"),
-                                  ),
-                                  ListTile(
-                                    leading: Icon(Icons.notifications_off),
-                                    title: Text("Mute"),
-                                  ),
-                                  ListTile(
-                                    leading: Icon(Icons.archive),
-                                    title: Text("Archive"),
-                                  ),
-                                ],
+                      filteredChats.sort((a, b) {
+                        final aPinned = a["pinned"] as bool;
+                        final bPinned = b["pinned"] as bool;
+                        if (aPinned == bPinned) return 0;
+                        return aPinned ? -1 : 1;
+                      });
+
+                      return ListView.builder(
+                        itemCount: filteredChats.length,
+                        itemBuilder: (context, index) {
+                          final chat = filteredChats[index];
+
+                          return GestureDetector(
+                            onTap: () {
+                              context.push(
+                                '${NamedRoutes.chats}/$index',
+                                extra: chat['name'],
                               );
                             },
-                          );
-                        },
-                        onTap: () {
-                          context.push(
-                            '${NamedRoutes.chats}/$index',
-                            extra: chat['name'],
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          child: Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 28,
-                                backgroundColor: chat["color"] as Color,
-                                child: Text(
-                                  chat["name"]
-                                      .toString()
-                                      .substring(0, 1)
-                                      .toUpperCase(),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                            onLongPress: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (_) {
+                                  return Wrap(
+                                    children: [
+                                      ListTile(
+                                        leading: Icon(Icons.push_pin),
+                                        title: Text("Pin Chat"),
+                                      ),
+                                      ListTile(
+                                        leading: Icon(Icons.notifications_off),
+                                        title: Text("Mute"),
+                                      ),
+                                      ListTile(
+                                        leading: Icon(Icons.archive),
+                                        title: Text("Archive"),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
                               ),
-
-                              const SizedBox(width: 12),
-
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            chat["name"].toString(),
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 15,
-                                            ),
-                                          ),
-                                        ),
-
-                                        if (chat["pinned"] as bool)
-                                          const Padding(
-                                            padding: EdgeInsets.only(right: 4),
-                                            child: Icon(
-                                              Icons.push_pin_rounded,
-                                              size: 15,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-
-                                        Text(
-                                          chat["time"].toString(),
-                                          style: TextStyle(
-                                            color: Colors.grey.shade500,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ],
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 30,
+                                    backgroundColor: chat["color"] as Color,
+                                    child: Text(
+                                      chat["name"]
+                                          .toString()
+                                          .substring(0, 1)
+                                          .toUpperCase(),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
+                                  ),
 
-                                    const SizedBox(height: 4),
+                                  const SizedBox(width: 12),
 
-                                    Row(
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Icon(
-                                          (chat["read"] as bool)
-                                              ? Icons.done_all
-                                              : Icons.done,
-                                          size: 16,
-                                          color: const Color(0xff229ED9),
-                                        ),
-
-                                        const SizedBox(width: 4),
-
-                                        Expanded(
-                                          child: Text(
-                                            chat["message"].toString(),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              color: Colors.grey.shade600,
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                chat["name"].toString(),
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 17,
+                                                ),
+                                              ),
                                             ),
-                                          ),
+
+                                            if (chat["pinned"] as bool)
+                                              const Padding(
+                                                padding: EdgeInsets.only(
+                                                  right: 4,
+                                                ),
+                                                child: Icon(
+                                                  Icons.push_pin_rounded,
+                                                  size: 15,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+
+                                            Text(
+                                              chat["time"].toString(),
+                                              style: TextStyle(
+                                                color: Colors.grey.shade500,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          ],
                                         ),
 
-                                        if (chat["muted"] as bool)
-                                          const Padding(
-                                            padding: EdgeInsets.only(left: 6),
-                                            child: Icon(
-                                              Icons.volume_off_outlined,
+                                        const SizedBox(height: 4),
+
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              (chat["read"] as bool)
+                                                  ? Icons.done_all
+                                                  : Icons.done,
                                               size: 16,
-                                              color: Colors.grey,
+                                              color: const Color(0xff229ED9),
                                             ),
-                                          ),
+
+                                            const SizedBox(width: 4),
+
+                                            Expanded(
+                                              child: Text(
+                                                chat["message"].toString(),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  color: Colors.grey.shade600,
+                                                ),
+                                              ),
+                                            ),
+
+                                            if (chat["muted"] as bool)
+                                              const Padding(
+                                                padding: EdgeInsets.only(
+                                                  left: 6,
+                                                ),
+                                                child: Icon(
+                                                  Icons.volume_off_outlined,
+                                                  size: 16,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                          ],
+                                        ),
                                       ],
                                     ),
-                                  ],
-                                ),
-                              ),
+                                  ),
 
-                              if ((chat["unread"] as int) > 0)
-                                Container(
-                                  margin: const EdgeInsets.only(left: 10),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: const BoxDecoration(
-                                    color: Color(0xff229ED9),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(20),
+                                  if ((chat["unread"] as int) > 0)
+                                    Container(
+                                      margin: const EdgeInsets.only(left: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                        vertical: 4,
+                                      ),
+                                      decoration: const BoxDecoration(
+                                        color: Color(0xff229ED9),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(20),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        chat["unread"].toString(),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  child: Text(
-                                    chat["unread"].toString(),
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       );
                     },
                   ),
@@ -467,7 +502,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     );
   }
 
-  static Widget _tab(String title, bool selected) {
+  /* static Widget _tab(String title, bool selected) {
     return Container(
       margin: const EdgeInsets.only(right: 20),
       alignment: Alignment.center,
@@ -491,5 +526,5 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         ],
       ),
     );
-  }
+  } */
 }

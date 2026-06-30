@@ -40,89 +40,53 @@ class SettingScreen extends ConsumerWidget {
           children: [
             const SizedBox(height: 24),
 
-            // Avatar
-            Container(
-              margin: const EdgeInsets.all(16),
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: Column(
-                children: [
-                  Stack(
-                    children: [
-                      CircleAvatar(
-                        radius: 42,
-                        backgroundColor: Theme.of(
-                          context,
-                        ).colorScheme.primaryContainer,
-                        child: const Text(
-                          'R',
-                          style: TextStyle(
-                            fontSize: 34,
-                            fontWeight: FontWeight.bold,
-                          ),
+            Column(
+              children: [
+                Stack(
+                  children: [
+                    CircleAvatar(
+                      radius: 42,
+                      backgroundColor: Theme.of(
+                        context,
+                      ).colorScheme.primaryContainer,
+                      child: const Text(
+                        'R',
+                        style: TextStyle(
+                          fontSize: 34,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: CircleAvatar(
-                          radius: 14,
-                          backgroundColor: Theme.of(
-                            context,
-                          ).colorScheme.primary,
-                          child: Icon(
-                            Icons.camera_alt,
-                            size: 14,
-                            color: Theme.of(context).cardColor,
-                          ),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: CircleAvatar(
+                        radius: 14,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        child: Icon(
+                          Icons.camera_alt,
+                          size: 14,
+                          color: Theme.of(context).cardColor,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
 
-                  const SizedBox(height: 12),
+                const SizedBox(height: 12),
 
-                  const Text(
-                    'Rishabh',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
-                  ),
+                const Text(
+                  'Rishabh',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+                ),
 
-                  const SizedBox(height: 4),
+                const SizedBox(height: 4),
 
-                  Text(
-                    '+91 XXX XXX XXXX',
-                    style: TextStyle(color: Colors.grey.shade600),
-                  ),
-
-                  const SizedBox(height: 4),
-
-                  Text(
-                    'last seen recently',
-                    style: TextStyle(color: Colors.grey.shade600),
-                  ),
-
-                  const SizedBox(height: 4),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextButton.icon(
-                        onPressed: () {},
-                        icon: const Icon(Icons.edit),
-                        label: const Text('Edit'),
-                      ),
-                      TextButton.icon(
-                        onPressed: () {},
-                        icon: const Icon(Icons.qr_code),
-                        label: const Text('QR'),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                Text(
+                  '+91 9876543210 • @rishabvsnv',
+                  style: TextStyle(color: Colors.grey.shade600),
+                ),
+              ],
             ),
 
             Padding(
@@ -152,7 +116,9 @@ class SettingScreen extends ConsumerWidget {
                   icon: Icons.shield_outlined,
                   title: 'Privacy & Security',
                   subtitle: 'Last Seen, Devices, Passkeys',
-                  onTap: () {},
+                  onTap: () {
+                    context.push(NamedRoutes.privacy);
+                  },
                 ),
                 const Divider(height: 1),
 
@@ -292,6 +258,7 @@ class SettingScreen extends ConsumerWidget {
                   title: 'Privacy Policy',
                   onTap: () {
                     context.push(NamedRoutes.privacy);
+                    // context.push(NamedRoutes.privacy);
                   },
                 ),
               ],
